@@ -28,7 +28,7 @@ class Deployer
 			
 			f.each_line do |l|
 			
-				if l =~ /\[(.*):(.*)\]/
+				if l =~ /\[(.*)=>(.*)\]/
 				
 					if !first_section
 					
