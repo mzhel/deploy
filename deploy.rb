@@ -1,5 +1,12 @@
 require "fileutils"
-
+#
+# Configuration file syntax:
+#
+# [src dir=>dst dir]
+# file1[=>file1 new name]
+# file2[=>file2 new name]
+# ...
+#
 class Deployer
 
 	include FileUtils
@@ -91,7 +98,15 @@ class Deployer
 					
 				else
 				
-					deployed_files << f_list.chomp
+					if f_list =~ /([A-Za-z0-9.]+)=>([A-Za-z0-9.]+)/
+					
+						deployed_files << {:src => $1, :dst => $2}
+					
+					else
+				
+						deployed_files << {:src => f_list.chomp, :dst => f_list.chomp}
+					
+					end
 					
 				end
 				
@@ -105,13 +120,17 @@ class Deployer
 			
 			mkdir_p(dd[:dst_dir])
 			
-			deployed_files.each do |df|
+			deployed_files.each do |h|
 			
-				print "\t#{df} ... "
+				sf = h[:src]
+			
+				df = h[:dst]
+			
+				print "\t\t|#{sf} => #{df}| - "
 				
 				begin
 				
-					cp(dd[:src_dir] + "/" + df, dd[:dst_dir]+ "/" +df, :preserve=>true)
+					cp(dd[:src_dir] + "/" + sf, dd[:dst_dir]+ "/" +df, :preserve=>true)
 					
 					puts "OK"
 					
