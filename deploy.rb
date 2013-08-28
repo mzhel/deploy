@@ -148,8 +148,12 @@ class Deployer
 	
 end
 
+deploy_file = "deploy"
+
+deploy_file = ARGV[0] if ARGV[0] != nil
+
 d = Deployer.new
 
-d.load_config
+d.load_config(deploy_file)
 
 d.deploy
